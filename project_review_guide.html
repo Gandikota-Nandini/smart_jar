@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartJar Project Review Guide</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --text: #1e293b;
+            --bg: #ffffff;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .container {
+            background: white;
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        h1 { color: var(--primary); font-size: 2.5em; margin-bottom: 30px; border-bottom: 3px solid var(--primary); padding-bottom: 10px; }
+        h2 { color: #0f172a; font-size: 1.8em; margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; }
+        h3 { color: #334155; font-size: 1.3em; margin-top: 25px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; border: 1px solid var(--border); text-align: left; }
+        th { background: #f1f5f9; font-weight: bold; }
+        code { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
+        .highlight { background: #fffbeb; border: 1px solid #fde68a; padding: 20px; border-radius: 12px; margin: 20px 0; }
+        .btn-print {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            cursor: pointer;
+            border: none;
+        }
+        @media print {
+            .btn-print { display: none; }
+            body { background: white; margin: 0; padding: 0; }
+            .container { box-shadow: none; border: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+    <button class="btn-print" onclick="window.print()">Print to PDF</button>
+
+    <div class="container">
+        <h1>SmartJar: Comprehensive Project Review Guide</h1>
+        <p>This guide provides a detailed technical and logical breakdown of the SmartJar Fintech Platform to help you navigate your project review with confidence.</p>
+
+        <hr>
+
+        <h2>1. High-Level Architecture</h2>
+        <p>SmartJar is a <strong>Full-Stack Financial Technology Application</strong> built on a modern <strong>Decoupled Architecture</strong>:</p>
+        <ul>
+            <li><strong>Client (Frontend)</strong>: A responsive, high-fidelity Single Page Application (SPA) built with <strong>React</strong> and <strong>Vite</strong>.</li>
+            <li><strong>Server (Backend)</strong>: A robust <strong>Spring Boot</strong> application utilizing a <strong>Service-Repository</strong> design pattern.</li>
+            <li><strong>Database</strong>: <strong>PostgreSQL</strong> for persistent storage of users, wallets, and transactions.</li>
+            <li><strong>Security</strong>: <strong>Stateless Authentication</strong> using <strong>JWT (JSON Web Tokens)</strong> and <strong>BCrypt</strong> hashing.</li>
+        </ul>
+
+        <h2>2. Technology Stack</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Layer</th>
+                    <th>Technology</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Frontend</strong></td><td>React 18</td><td>Declarative UI components and state management.</td></tr>
+                <tr><td><strong>Build Tool</strong></td><td>Vite</td><td>Ultra-fast development and optimized production bundling.</td></tr>
+                <tr><td><strong>Styling</strong></td><td>Tailwind CSS</td><td>Modern, utility-first styling for premium aesthetics.</td></tr>
+                <tr><td><strong>Data Viz</strong></td><td>Recharts</td><td>Dynamic financial analytics and balance trends.</td></tr>
+                <tr><td><strong>Icons</strong></td><td>Lucide React</td><td>High-quality, consistent iconography.</td></tr>
+                <tr><td><strong>Backend</strong></td><td>Spring Boot 3</td><td>Enterprise-grade Java framework for RESTful microservices.</td></tr>
+                <tr><td><strong>Database</strong></td><td>JPA / Hibernate</td><td>Object-Relational Mapping (ORM) for database abstraction.</td></tr>
+                <tr><td><strong>Security</strong></td><td>Spring Security</td><td>Role-based access control and JWT integration.</td></tr>
+                <tr><td><strong>Utilities</strong></td><td>Lombok</td><td>Boilerplate reduction for Java entities and DTOs.</td></tr>
+                <tr><td><strong>API Docs</strong></td><td>Swagger/OpenAPI</td><td>Automated API documentation and testing interface.</td></tr>
+            </tbody>
+        </table>
+
+        <h2>3. Module-by-Module Breakdown</h2>
+
+        <h3>A. Authentication & User Security</h3>
+        <p><strong>Technologies</strong>: Spring Security, JWT, BCrypt, Ephemeral RAM Vault.</p>
+        <ul>
+            <li><strong>Logic</strong>: At registration, passwords are never stored in plaintext; they are hashed using <strong>BCrypt</strong>.
+            During login, the system generates a <strong>JWT token</strong> containing the user's ID, which is sent to the frontend and stored in <code>localStorage</code>.</li>
+            <li><strong>Password Reset</strong>: Uses a <strong>6-digit OTP sequence</strong>. The OTP is stored in an ephemeral <code>ConcurrentHashMap</code> (the "Identity Vault") in RAM, ensuring it expires automatically and never touches the disk for maximum security.</li>
+            <li><strong>Identity Normalization</strong>: All emails are normalized to lowercase on both ends to prevent identity mismatches.</li>
+        </ul>
+
+        <h3>B. Digital Gold Vault</h3>
+        <p><strong>Technologies</strong>: MetalPriceAPI, BigDecimal Arithmetic.</p>
+        <ul>
+            <li><strong>Logic</strong>: The system fetches <strong>live gold prices</strong> via a background <code>RestTemplate</code> call to a global price API.</li>
+            <li><strong>Fractional Investing</strong>: Users can buy gold for as little as ₹1. The system calculates grams to 6 decimal places using <code>BigDecimal</code> with <code>RoundingMode.HALF_UP</code> to ensure absolute financial precision without rounding errors.</li>
+            <li><strong>Liquidations</strong>: Users can sell gold back to their internal wallet at the current market rate instantly.</li>
+        </ul>
+
+        <h3>C. NPCI-Style UPI Simulation</h3>
+        <p><strong>Technologies</strong>: Service-Repository Pattern, Transaction Reference Tracking.</p>
+        <ul>
+            <li><strong>Logic</strong>: Mimics the real-world UPI ecosystem. We have a registry of <code>UpiAccount</code> entities (e.g., <code>rahul@upi</code>).</li>
+            <li><strong>P2P Transfers</strong>: When a user sends money, the system validates the receiver's UPI ID, verifies the sender's MPIN, and performs an atomic balance transfer between wallets.</li>
+            <li><strong>Persistence</strong>: Every transfer generates a unique <strong>Transaction Reference ID</strong> and is recorded in both the <code>Transaction</code> ledger and the dedicated <code>UpiTransaction</code> audit log.</li>
+        </ul>
+
+        <h3>D. Micro-Savings & Automation</h3>
+        <p><strong>Technologies</strong>: Savings Engine, "Jar" Concepts.</p>
+        <ul>
+            <li><strong>Logic</strong>: <strong>The Jar Concept</strong>: Encourages users to save "spare change." <strong>Round-up Simulation</strong>: Logic that identifies small change from transactions and "sweeps" it into the Gold Vault.</li>
+            <li><strong>Automated Investment</strong>: Savings are automatically converted into gold holdings, providing a hedge against inflation.</li>
+        </ul>
+
+        <h3>E. Financial Analytics Dashboard</h3>
+        <p><strong>Technologies</strong>: Recharts (AreaChart, PieChart), Lucide.</p>
+        <ul>
+            <li><strong>Logic</strong>: <strong>Data Processing</strong>: The frontend fetches the global transaction history and runs it through a <code>processCharts</code> engine.</li>
+            <li><strong>Balance Trends</strong>: Generates a 7-day visualization of the user's net worth.</li>
+            <li><strong>Spending profile</strong>: Uses a Doughnut chart to categorize expenses (Investments vs. Payments vs. Utilities) in real-time.</li>
+        </ul>
+
+        <h2>4. Code Folder Structure Breakdown</h2>
+        <h3>Backend (src/main/java/com/smartjar)</h3>
+        <ol>
+            <li><code>controller/</code>: The <strong>Entry Points</strong>. Handles HTTP requests and returns JSON.</li>
+            <li><code>service/</code>: The <strong>Brains</strong>. Contains all business logic (e.g., how money is calculated, how OTPs are verified).</li>
+            <li><code>repository/</code>: The <strong>Data Access</strong>. Standard JPA interfaces for talking to the database.</li>
+            <li><code>entity/</code>: The <strong>Blueprints</strong>. Java classes that map exactly to your database tables.</li>
+            <li><code>security/</code>: The <strong>Shield</strong>. Contains the JWT Filter and the <code>SecurityConfig</code> (CORS settings, permissioning).</li>
+        </ol>
+
+        <h3>Frontend (src/)</h3>
+        <ol>
+            <li><code>pages/</code>: The <strong>Views</strong>. Large components like <code>Dashboard.jsx</code>, <code>Gold.jsx</code>, and <code>Savings.jsx</code>.</li>
+            <li><code>api/</code>: The <strong>Messenger</strong>. Contains <code>axiosConfig.js</code> which handles tokens and the backend URL.</li>
+            <li><code>components/</code>: The <strong>Building Blocks</strong>. Reusable pieces like the <code>Layout</code>.</li>
+        </ol>
+
+        <div class="highlight">
+            <h2>5. Key Highlights to Mention in Review</h2>
+            <ul>
+                <li><strong>Industrial Precision</strong>: I used <code>BigDecimal</code> for all money and gold math to avoid the floating-point inaccuracies common with <code>double</code>.</li>
+                <li><strong>Stateless Security</strong>: The app doesn't use sessions; it's completely stateless, making it scalable and secure.</li>
+                <li><strong>Responsive Aesthetics</strong>: The UI is designed with a mobile-first approach using Tailwind's layout engine.</li>
+                <li><strong>Simulation Integrity</strong>: The UPI simulator is designed to mimic the NPCI's verification flow (Verify UPI -> Enter MPIN -> Confirm Transfer).</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Automatic PDF Prompt on Open (Optional)
+        // window.onload = () => { setTimeout(() => { window.print(); }, 1000); };
+    </script>
+</body>
+</html>
